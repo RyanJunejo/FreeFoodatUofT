@@ -4,7 +4,8 @@
 
 A web application designed to help University of Toronto students find free food events on campus, reducing food insecurity and minimizing food waste from campus events.
 
-![Free Food at UofT Screenshot](https://i.imgur.com/your-screenshot.jpg)
+![Free Food at UofT Screenshot]![image](https://github.com/user-attachments/assets/dd97edd6-5cdd-41ef-bc2c-e03a7e0d724d)
+
 
 ## About The Project
 
@@ -77,15 +78,10 @@ npm run dev
 
 ## Contact
 
-Your Name - [@yourtwitter](https://twitter.com/yourtwitter)
+freefoodatuoft@gmail.com for inquiries, event submissions or additional details
 
-Project Link: [https://github.com/yourusername/free-food-uoft](https://github.com/yourusername/free-food-uoft)
+Project Link: [https://github.com/yourusername/free-food-uoft](https://github.com/RyanJunejo/FreeFoodatUofT)
 
-## Acknowledgments
-
-- University of Toronto Student Union
-- UofT Computer Science Department
-- All event organizers who contribute to the platform
 
 ## License
 
