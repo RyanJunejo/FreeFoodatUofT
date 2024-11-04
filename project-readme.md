@@ -1,6 +1,6 @@
 # Free Food at UofT 🍕
 
-[Live Site](https://freefoodatuoft.vercel.app/)
+[Click here to try out the website!](https://freefoodatuoft.vercel.app/)
 
 A web application designed to help University of Toronto students find free food events on campus, reducing food insecurity and minimizing food waste from campus events.
 
