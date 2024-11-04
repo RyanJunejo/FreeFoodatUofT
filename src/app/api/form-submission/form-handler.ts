@@ -1,5 +1,7 @@
 import { handleFormSubmission } from '@/lib/googleForms';
 
+
+
 export async function POST(req: Request) {
   try {
     const formData = await req.json();
@@ -16,9 +18,10 @@ export async function POST(req: Request) {
       headers: { 'Content-Type': 'application/json' }
     });
 
-  } catch (error: any) {
+  } catch (error: Error | unknown) {
     console.error('Error:', error);
-    return new Response(JSON.stringify({ success: false, error: error.message }), {
+    const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
+    return new Response(JSON.stringify({ success: false, error: errorMessage }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' }
     });

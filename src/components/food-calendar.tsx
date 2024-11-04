@@ -8,37 +8,6 @@ import type { FoodEvent } from '@/types/events';
 // Add your Google Form URL
 const GOOGLE_FORM_URL = "https://forms.gle/Q6rcUqQTCdpGwU1F9";
 
-// Add these utility functions outside the component
-const formatDateForDisplay = (dateStr: string) => {
-  const [year, month, day] = dateStr.split('-');
-  return new Date(
-    parseInt(year),
-    parseInt(month) - 1,
-    parseInt(day)
-  ).toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  });
-};
-
-const compareDates = (dateA: string, dateB: string) => {
-  const [dayA, monthA, yearA] = dateA.split('/');
-  const [dayB, monthB, yearB] = dateB.split('/');
-  const dateAObj = new Date(`${yearA}-${monthA}-${dayA}`);
-  const dateBObj = new Date(`${yearB}-${monthB}-${dayB}`);
-  return dateAObj.getTime() - dateBObj.getTime();
-};
-
-const compareTimes = (timeA: string, timeB: string) => {
-  // Convert times to 24-hour format for proper comparison
-  const [hoursA, minutesA] = timeA.split(':');
-  const [hoursB, minutesB] = timeB.split(':');
-  const timeAMinutes = parseInt(hoursA) * 60 + parseInt(minutesA);
-  const timeBMinutes = parseInt(hoursB) * 60 + parseInt(minutesB);
-  return timeAMinutes - timeBMinutes;
-};
-
 // Extract the event card into a separate component
 const EventCard: React.FC<{ event: FoodEvent }> = ({ event }) => {
   return (
@@ -100,6 +69,22 @@ const EventCard: React.FC<{ event: FoodEvent }> = ({ event }) => {
   );
 };
 
+// Add these helper functions at the top of the file
+const compareTimes = (time1: string, time2: string): number => {
+  const [h1, m1] = time1.split(':').map(Number);
+  const [h2, m2] = time2.split(':').map(Number);
+  if (h1 !== h2) return h1 - h2;
+  return m1 - m2;
+};
+
+const compareDates = (date1: string, date2: string): number => {
+  const [d1, m1, y1] = date1.split('/').map(Number);
+  const [d2, m2, y2] = date2.split('/').map(Number);
+  if (y1 !== y2) return y1 - y2;
+  if (m1 !== m2) return m1 - m2;
+  return d1 - d2;
+};
+
 export default function FoodEventCalendar() {
   const [events, setEvents] = useState<FoodEvent[]>([]);
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
@@ -139,38 +124,6 @@ export default function FoodEventCalendar() {
     fetchEvents();
   }, [fetchEvents]);
 
-  async function handleSubmitEvent(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    
-    try {
-      const response = await fetch('/api/form-submission', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          eventName: formData.get('title'),
-          eventLocation: formData.get('location'),
-          eventDate: formData.get('date'),
-          startTime: formData.get('time'),
-          eventDescription: formData.get('description'),
-          foodTypes: [formData.get('foodType')],
-          contactEmail: formData.get('email'),
-          hostClub: formData.get('hostClub'),
-          registrationLink: formData.get('registrationLink'),
-        }),
-      });
-
-      if (!response.ok) throw new Error('Failed to submit event');
-      alert('Event submitted for approval!');
-      // Close dialog and reset form
-    } catch (error) {
-      console.error('Error submitting event:', error);
-      alert('Error submitting event. Please try again.');
-    }
-  }
-
   const groupEventsByDate = useCallback((events: FoodEvent[]) => {
     // First filter events by search query
     const filteredEvents = events.filter(event => {
@@ -190,7 +143,6 @@ export default function FoodEventCalendar() {
     // Convert selected date to a Date object for comparison
     const [year, month, day] = selectedDate.split('-');
     const selectedDateObj = new Date(`${year}-${month}-${day}`);
-    const selectedDateFormatted = `${day}/${month}/${year}`;
 
     const groups = filteredEvents
       .filter(event => {

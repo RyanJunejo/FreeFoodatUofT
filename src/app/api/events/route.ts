@@ -1,5 +1,4 @@
 import { getFormResponses } from '@/lib/googleForms';
-import { FoodEvent } from '@/types/events';
 
 export async function GET(): Promise<Response> {
   try {
