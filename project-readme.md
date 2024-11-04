@@ -4,7 +4,8 @@
 
 A web application designed to help University of Toronto students find free food events on campus, reducing food insecurity and minimizing food waste from campus events.
 
-[Free Food at UofT Screenshot](https://i.imgur.com/your-screenshot.jpg)
+![image](https://github.com/user-attachments/assets/29485866-69a9-40ef-976a-332503835f50)
+
 
 ## About The Project
 
