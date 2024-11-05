@@ -4,6 +4,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { Calendar as CalendarIcon, MapPin, Clock, Users, Plus } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import type { FoodEvent } from '@/types/events';
+//import Image from 'next/image';
 
 // Add your Google Form URL
 const GOOGLE_FORM_URL = "https://forms.gle/Q6rcUqQTCdpGwU1F9";
@@ -193,7 +194,7 @@ export default function FoodEventCalendar() {
     <div className="max-w-4xl mx-auto p-4">
       <div className="mb-8">
         <h1 className="text-3xl font-bold mb-2">FreeFood@UofT</h1>
-        <p className="text-gray-600">Reducing food insecurity on campus one event at a time!</p>
+        <p className="text-gray-800 font-medium">Reducing food insecurity on campus one event at a time!</p>
       </div>
 
       <div className="flex justify-between items-center mb-6">
