@@ -4,6 +4,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { Calendar as CalendarIcon, MapPin, Clock, Users, Plus } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import type { FoodEvent } from '@/types/events';
+import { Analytics } from "@vercel/analytics/react"
 //import Image from 'next/image';
 
 // Add your Google Form URL
@@ -282,6 +283,7 @@ export default function FoodEventCalendar() {
           </div>
         )}
       </div>
+      <Analytics />
     </div>
   );
 }
