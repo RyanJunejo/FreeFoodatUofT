@@ -33,7 +33,7 @@ export async function getFormResponses(): Promise<FoodEvent[]> {
     );
     
     await doc.loadInfo();
-    const sheet = doc.sheetsByIndex[0];
+    const sheet = doc.sheetsByTitle['API Form'];
     const rows = await sheet.getRows();
 
     // Add console.log to see what the data looks like
@@ -82,7 +82,7 @@ export async function updateApprovalStatus(_rowId: string, _status: 'approved' |
   );
   await doc.loadInfo();
   
-  const sheet = doc.sheetsByIndex[0];
+  const sheet = doc.sheetsByTitle['API Form'];
   const rows = await sheet.getRows();
   
   const targetRow = rows.find(row => row.get('ID') === _rowId);
@@ -109,7 +109,7 @@ export async function handleFormSubmission(formData: FoodEventSubmission) {
     );
     await doc.loadInfo();
     
-    const sheet = doc.sheetsByIndex[0];
+    const sheet = doc.sheetsByTitle['API Form'];
     
     // Add the new row
     await sheet.addRow({

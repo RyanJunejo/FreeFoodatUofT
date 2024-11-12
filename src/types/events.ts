@@ -4,10 +4,9 @@ export interface FoodEvent {
   event_date: string;
   start_time: string;
   event_description?: string;
-  food_types: string[];
   host_club?: string;
+  food_types: string[] | string;
   registration_link?: string;
-  contact_email?: string;
 }
 
 export interface EventFormData {
