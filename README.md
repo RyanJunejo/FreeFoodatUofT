@@ -1,4 +1,4 @@
-# Free Food at UofT 🍕
+# Free Food @ UofT 🍕
 
 [Live Site](https://freefoodatuoft.vercel.app/)
 
