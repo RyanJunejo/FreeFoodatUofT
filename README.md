@@ -81,7 +81,7 @@ npm run dev
 
 freefoodatuoft@gmail.com for inquiries, event submissions or additional details
 
-Project Link: [https://github.com/yourusername/free-food-uoft](https://github.com/RyanJunejo/FreeFoodatUofT)
+Project Link: https://github.com/RyanJunejo/FreeFoodatUofT
 
 
 ## License
