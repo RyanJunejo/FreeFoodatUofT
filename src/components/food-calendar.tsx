@@ -270,7 +270,8 @@ export default function FoodEventCalendar() {
 
                   {groupedEvents.today.length === 0 && groupedEvents.upcoming.length === 0 && (
                     <div className="text-center py-8 text-gray-500">
-                      No events found for the selected date or later.
+                      {/* No events found for the selected date or later. */}
+                      Website under maintenance for Winter Break. Check back later!
                     </div>
                   )}
                 </>
