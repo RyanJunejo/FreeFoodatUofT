@@ -3,7 +3,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { Calendar as CalendarIcon, MapPin, Clock, Users, Plus } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import Select, { StylesConfig, ActionMeta } from 'react-select';
+import Select, { StylesConfig } from 'react-select';
 import type { FoodEvent } from '@/types/events';
 import { Analytics } from "@vercel/analytics/react";
 
