@@ -323,7 +323,7 @@ export default function FoodEventCalendar() {
 
         {groupedEvents.today.length === 0 && groupedEvents.upcoming.length === 0 && (
           <div className="text-center py-8 text-gray-500">
-            Website under maintenance for Winter Break. Check back later!
+            No upcoming events. Check back later!
           </div>
         )}
       </div>
