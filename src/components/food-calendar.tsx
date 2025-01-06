@@ -274,7 +274,7 @@ export default function FoodEventCalendar() {
             <Select
               options={campusOptions}
               value={campusOptions.find(option => option.value === selectedCampus)}
-              onChange={(newValue: unknown, actionMeta: ActionMeta<unknown>) => {
+              onChange={(newValue) => {
                 const option = newValue as CampusOption | null;
                 setSelectedCampus(option?.value ?? 'All');
               }}
