@@ -3,12 +3,45 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { Calendar as CalendarIcon, MapPin, Clock, Users, Plus } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import Select, { StylesConfig } from 'react-select';
 import type { FoodEvent } from '@/types/events';
-import { Analytics } from "@vercel/analytics/react"
-//import Image from 'next/image';
+import { Analytics } from "@vercel/analytics/react";
 
 // Add your Google Form URL
 const GOOGLE_FORM_URL = "https://forms.gle/Q6rcUqQTCdpGwU1F9";
+
+// Define custom styles for react-select to match native inputs
+const customStyles: StylesConfig = {
+  control: (provided) => ({
+    ...provided,
+    borderRadius: '0.5rem',
+    borderColor: '#ccc',
+    padding: '0.5rem',
+    boxShadow: 'none',
+    '&:hover': {
+      borderColor: '#aaa',
+    },
+  }),
+  menu: (provided) => ({
+    ...provided,
+    borderRadius: '0.5rem',
+  }),
+  input: (provided) => ({
+    ...provided,
+    margin: 0,
+    padding: 0,
+  }),
+  placeholder: (provided) => ({
+    ...provided,
+    margin: 0,
+    padding: 0,
+  }),
+  singleValue: (provided) => ({
+    ...provided,
+    margin: 0,
+    padding: 0,
+  }),
+};
 
 // Extract the event card into a separate component
 const EventCard: React.FC<{ event: FoodEvent }> = ({ event }) => {
@@ -93,6 +126,14 @@ export default function FoodEventCalendar() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCampus, setSelectedCampus] = useState<'UTSG' | 'UTM' | 'UTSC' | 'All'>('All');
+
+  const campusOptions = [
+    { value: 'All', label: 'All Campuses' },
+    { value: 'UTSG', label: 'UTSG' },
+    { value: 'UTM', label: 'UTM' },
+    { value: 'UTSC', label: 'UTSC' },
+  ];
 
   const fetchEvents = useCallback(async () => {
     try {
@@ -127,12 +168,10 @@ export default function FoodEventCalendar() {
   }, [fetchEvents]);
 
   const groupEventsByDate = useCallback((events: FoodEvent[]) => {
-    // First filter events by search query
+    // First filter events by search query and campus
     const filteredEvents = events.filter(event => {
       const searchTerms = searchQuery.toLowerCase().trim();
-      if (!searchTerms) return true;
-      
-      return (
+      const matchesSearch = !searchTerms || (
         event.event_name.toLowerCase().includes(searchTerms) ||
         event.event_location.toLowerCase().includes(searchTerms) ||
         event.event_description?.toLowerCase().includes(searchTerms) ||
@@ -140,6 +179,10 @@ export default function FoodEventCalendar() {
         (Array.isArray(event.food_types) && 
           event.food_types.some(food => food.toLowerCase().includes(searchTerms)))
       );
+
+      const matchesCampus = selectedCampus === 'All' || event.campus === selectedCampus;
+
+      return matchesSearch && matchesCampus;
     });
 
     // Convert selected date to a Date object for comparison
@@ -176,8 +219,11 @@ export default function FoodEventCalendar() {
       return dateComparison;
     });
 
+    // Limit upcoming events to 10
+    groups.upcoming = groups.upcoming.slice(0, 10);
+
     return groups;
-  }, [selectedDate, searchQuery]);
+  }, [selectedDate, searchQuery, selectedCampus]);
 
   if (loading) {
     return <div className="flex justify-center items-center h-64">Loading events...</div>;
@@ -191,6 +237,8 @@ export default function FoodEventCalendar() {
     );
   }
 
+  const groupedEvents = groupEventsByDate(events);
+
   return (
     <div className="max-w-4xl mx-auto p-4">
       <div className="mb-8">
@@ -198,89 +246,84 @@ export default function FoodEventCalendar() {
         <p className="text-gray-800 font-medium">Reducing food insecurity on campus one event at a time!</p>
       </div>
 
-      <div className="flex justify-between items-center mb-6">
-        <div className="flex gap-2">
-          <input 
-            type="date" 
-            className="border p-2 rounded"
-            value={selectedDate}
-            onChange={(e) => setSelectedDate(e.target.value)}
-          />
-          <input 
-            type="text" 
-            placeholder="Search events..." 
-            className="border p-2 rounded w-64"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
+      <div className="flex flex-col md:flex-row justify-between items-center mb-6 space-y-4 md:space-y-0">
+        <div className="flex flex-col md:flex-row gap-2 w-full">
+          <div className="flex flex-col md:flex-row gap-2 w-full md:w-auto">
+            <input 
+              type="date" 
+              className="border p-2 rounded w-full md:w-auto"
+              value={selectedDate}
+              onChange={(e) => setSelectedDate(e.target.value)}
+            />
+            <input 
+              type="text" 
+              placeholder="Search events..." 
+              className="border p-2 rounded w-full md:w-64"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
+
+          <div className="flex flex-col md:flex-row gap-2 w-full md:w-auto">
+            <Select
+              options={campusOptions}
+              value={campusOptions.find(option => option.value === selectedCampus)}
+              onChange={(option) => setSelectedCampus(option?.value as 'UTSG' | 'UTM' | 'UTSC' | 'All')}
+              className="w-full md:w-64"
+              styles={customStyles}
+            />
+            <a
+              href={GOOGLE_FORM_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-green-500 text-white px-4 py-2 rounded flex items-center justify-center gap-2 hover:bg-green-600 transition-colors w-full md:w-auto"
+            >
+              <Plus size={20} />
+              Add Event
+            </a>
+          </div>
         </div>
-        
-        <a
-          href={GOOGLE_FORM_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="bg-blue-600 text-white px-4 py-2 rounded flex items-center gap-2 hover:bg-blue-700 transition-colors"
-        >
-          <Plus size={20} />
-          Add Event
-        </a>
       </div>
 
       <div className="space-y-8">
-        {events.length > 0 ? (
-          <>
-            {(() => {
-              const groupedEvents = groupEventsByDate(events);
-              return (
-                <>
-                  {groupedEvents.today.length > 0 && (
-                    <div>
-                      <h2 className="text-xl font-semibold mb-4">
-                        Events Happening on {(() => {
-                          const [year, month, day] = selectedDate.split('-');
-                          return new Date(
-                            parseInt(year),
-                            parseInt(month) - 1,
-                            parseInt(day)
-                          ).toLocaleDateString('en-US', {
-                            year: 'numeric',
-                            month: 'long',
-                            day: 'numeric'
-                          });
-                        })()}
-                      </h2>
-                      <div className="space-y-4">
-                        {groupedEvents.today.map((event, index) => (
-                          <EventCard key={`${event.event_name}-${event.event_date}-${index}`} event={event} />
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                  
-                  {groupedEvents.upcoming.length > 0 && (
-                    <div>
-                      <h2 className="text-xl font-semibold mb-4">Upcoming Events</h2>
-                      <div className="space-y-4">
-                        {groupedEvents.upcoming.map((event, index) => (
-                          <EventCard key={`${event.event_name}-${event.event_date}-${index}`} event={event} />
-                        ))}
-                      </div>
-                    </div>
-                  )}
+        {groupedEvents.today.length > 0 && (
+          <div>
+            <h2 className="text-xl font-semibold mb-4">
+              Events Happening on {(() => {
+                const [year, month, day] = selectedDate.split('-');
+                return new Date(
+                  parseInt(year),
+                  parseInt(month) - 1,
+                  parseInt(day)
+                ).toLocaleDateString('en-US', {
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric'
+                });
+              })()}
+            </h2>
+            <div className="space-y-4">
+              {groupedEvents.today.map((event, index) => (
+                <EventCard key={`${event.event_name}-${event.event_date}-${index}`} event={event} />
+              ))}
+            </div>
+          </div>
+        )}
 
-                  {groupedEvents.today.length === 0 && groupedEvents.upcoming.length === 0 && (
-                    <div className="text-center py-8 text-gray-500">
-                      {/* No events found for the selected date or later. */}
-                      Website under maintenance for Winter Break. Check back later!
-                    </div>
-                  )}
-                </>
-              );
-            })()}
-          </>
-        ) : (
+        {groupedEvents.upcoming.length > 0 && (
+          <div>
+            <h2 className="text-xl font-semibold mb-4">Upcoming Events</h2>
+            <div className="space-y-4">
+              {groupedEvents.upcoming.map((event, index) => (
+                <EventCard key={`${event.event_name}-${event.event_date}-${index}`} event={event} />
+              ))}
+            </div>
+          </div>
+        )}
+
+        {groupedEvents.today.length === 0 && groupedEvents.upcoming.length === 0 && (
           <div className="text-center py-8 text-gray-500">
-            No approved events at this time. Check back later or submit a new event!
+            Website under maintenance for Winter Break. Check back later!
           </div>
         )}
       </div>

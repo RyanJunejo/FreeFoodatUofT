@@ -7,6 +7,7 @@ export interface FoodEvent {
   host_club?: string;
   food_types: string[] | string;
   registration_link?: string;
+  campus: 'UTSG' | 'UTM' | 'UTSC';
 }
 
 export interface EventFormData {

@@ -57,6 +57,7 @@ export async function getFormResponses(): Promise<FoodEvent[]> {
         contact_email: row.get('Contact Email') || '',
         additional_notes: row.get('Any Additional Notes? (Optional)') || undefined,
         registration_link: row.get('Is Registration Required? If so, provide the link to register in "Other..."') || undefined,
+        campus: row.get('Campus') as 'UTSG' | 'UTM' | 'UTSC',
         approval_status: 'approved' as const,
       }))
       // Optional: Sort by date
