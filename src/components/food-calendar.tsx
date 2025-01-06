@@ -3,7 +3,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { Calendar as CalendarIcon, MapPin, Clock, Users, Plus } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import Select, { StylesConfig } from 'react-select';
+import Select, { StylesConfig, ActionMeta } from 'react-select';
 import type { FoodEvent } from '@/types/events';
 import { Analytics } from "@vercel/analytics/react";
 
@@ -119,6 +119,12 @@ const compareDates = (date1: string, date2: string): number => {
   if (m1 !== m2) return m1 - m2;
   return d1 - d2;
 };
+
+// Add this interface near the top of the file
+interface CampusOption {
+  value: 'UTSG' | 'UTM' | 'UTSC' | 'All';
+  label: string;
+}
 
 export default function FoodEventCalendar() {
   const [events, setEvents] = useState<FoodEvent[]>([]);
@@ -268,7 +274,10 @@ export default function FoodEventCalendar() {
             <Select
               options={campusOptions}
               value={campusOptions.find(option => option.value === selectedCampus)}
-              onChange={(option) => setSelectedCampus(option?.value as 'UTSG' | 'UTM' | 'UTSC' | 'All')}
+              onChange={(newValue: unknown, actionMeta: ActionMeta<unknown>) => {
+                const option = newValue as CampusOption | null;
+                setSelectedCampus(option?.value ?? 'All');
+              }}
               className="w-full md:w-64"
               styles={customStyles}
             />
